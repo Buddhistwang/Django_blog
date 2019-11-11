@@ -75,9 +75,19 @@ WSGI_APPLICATION = 'Django_blog.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
+    # sqlite3配置
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+
+    # mysql配置
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'mysql_name',
+    #     'USER': 'mysql_user',
+    #     'PASSWORD': 'mysql_password',
+    #     'HOST': 'mysql_host',
+    #     'PORT': 'mysql_port',
     }
 }
 
