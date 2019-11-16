@@ -40,7 +40,7 @@ class Post(models.Model):
     modified_time = models.DateTimeField(verbose_name='修改时间')
 
     # 文章摘要 blank=True 允许为空
-    excerpt = models.CharField(max_length=200, blank=True)
+    excerpt = models.CharField(max_length=200, blank=True, verbose_name='引用')
 
     # 分类 on_delete=models.CASCADE 参数是关联删除 一对多
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='分类')
