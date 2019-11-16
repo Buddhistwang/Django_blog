@@ -3,6 +3,8 @@ from django.db import models
 from django.contrib.auth.models import User
 # 为创建博客时自动填充时间调用模块
 from django.utils import timezone
+# 管理路由
+from django.urls import reverse
 
 # 博客分类
 class Category(models.Model):
@@ -53,6 +55,11 @@ class Post(models.Model):
     def save(self, *args, **kwargs):
         self.modified_time = timezone.now()
         super().save(*args, **kwargs)
+
+    # 管理url记得导入serverse 第一个参数告诉Django找到blog下detail
+    # 第二个参数把路由里的<int:pk> 替换为pk，例如/posts/2/
+    def get_absolute_url(self):
+        return reverse('blog:detail', kwargs={'pk': self.pk})
 
     # 使用别名是为了在后台显示中文
     class Meta:
