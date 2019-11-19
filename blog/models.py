@@ -5,6 +5,9 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 # 管理路由
 from django.urls import reverse
+# 自动生成摘要
+import markdown
+from django.utils.html import strip_tags
 
 # 博客分类
 class Category(models.Model):
@@ -16,6 +19,8 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+
 # 博客标签
 class Tag(models.Model):
     name = models.CharField(max_length=100, verbose_name='标签名')
@@ -27,6 +32,7 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+
 
 # 博客文章
 class Post(models.Model):
@@ -40,7 +46,7 @@ class Post(models.Model):
     modified_time = models.DateTimeField(verbose_name='修改时间')
 
     # 文章摘要 blank=True 允许为空
-    excerpt = models.CharField(max_length=200, blank=True, verbose_name='引用')
+    excerpt = models.CharField(max_length=200, blank=True, verbose_name='摘要')
 
     # 分类 on_delete=models.CASCADE 参数是关联删除 一对多
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='分类')
@@ -52,8 +58,21 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='作者')
 
     # 重写save函数是为了，每次进行修改时把修改文章时间改为当前时间。
+    # 增加自动添加摘要
     def save(self, *args, **kwargs):
         self.modified_time = timezone.now()
+
+        # 首先实例化一个 Markdown 类，用于渲染 body 的文本。
+        # 由于摘要并不需要生成文章目录，所以去掉了目录拓展。
+        md = markdown.Markdown(extensions=[
+            'markdown.extensions.extra',
+            'markdown.extensions.codehilite',
+        ])
+        # 先将 Markdown 文本渲染成 HTML 文本
+        # strip_tags 去掉 HTML 文本的全部 HTML 标签
+        # 从文本摘取前 54 个字符赋给 excerpt
+        if self.excerpt == None:
+            self.excerpt = strip_tags(md.convert(self.body))[:54]
         super().save(*args, **kwargs)
 
     # 管理url记得导入serverse 第一个参数告诉Django找到blog下detail
