@@ -4,7 +4,7 @@ from django.utils.text import slugify
 from markdown.extensions.toc import TocExtension
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
-from .models import Post
+from .models import Post, Category, Tag
 
 
 
@@ -48,3 +48,25 @@ def detail(request, pk):
     return render(request, 'blog/detail.html', context={'post': post})
 
 
+# 归档视图函数
+
+def archive(request, year, month):
+    # 按照年月排序查询，然后在按照创建时间的倒叙查询
+    post_list = Post.objects.filter(created_time__year=year, created_time__month=month).order_by('-created_time')
+    return render(request, 'blog/index.html', context={'post_list': post_list})
+
+
+# 分类视图函数
+def category(request, pk):
+    # 先导入404页面，记得导入Category类，
+    cate = get_object_or_404(Category, pk=pk)
+    # 然后根据分类查询，按照创建时间倒叙排序，最新创建的在最上面
+    post_list = Post.objects.filter(category=cate).order_by('-created_time')
+    return render(request, 'blog/index.html', context={'post_list': post_list})
+
+
+# 标签视图函数
+def tag(request, pk):
+    t = get_object_or_404(Tag, pk=pk)
+    post_list = Post.objects.filter(tags=t).order_by('-created_time')
+    return render(request, 'blog/index.html', context={'post_list': post_list})
