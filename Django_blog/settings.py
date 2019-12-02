@@ -35,7 +35,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blog.apps.BlogConfig', # 后台注册博客
+    'blog.apps.BlogConfig',  # 后台注册博客
+    'comments.apps.CommentsConfig',  # 注册 comments 应用
     # 'blog', # 后台注册博客
 ]
 
