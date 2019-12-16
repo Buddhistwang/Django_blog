@@ -20,4 +20,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # 配置blog路由
     path('', include('blog.urls')),
+    # 配置评论路由
+    path('', include('comments.urls')),
 ]
