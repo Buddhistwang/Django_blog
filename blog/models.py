@@ -17,6 +17,8 @@ class Category(models.Model):
         verbose_name = '分类'
         verbose_name_plural = verbose_name
 
+
+
     def __str__(self):
         return self.name
 
@@ -84,6 +86,8 @@ class Post(models.Model):
     class Meta:
         verbose_name = '文章'
         verbose_name_plural = verbose_name
+        # 对文章进行排序，后插入的文章显示在最上面
+        ordering = ['-created_time']
 
     def __str__(self):
         return self.title
